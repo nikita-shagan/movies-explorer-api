@@ -47,7 +47,9 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.logout = (req, res) => {
-  res.clearCookie('jwt').send('Successfully logged out');
+  const { NODE_ENV } = process.env;
+  const domain = NODE_ENV === 'production' ? PARENT_DOMAIN : DEV_DOMAIN;
+  res.clearCookie('jwt', { domain }).send('Successfully logged out');
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
