@@ -4,9 +4,9 @@ const User = require('../models/user');
 const { NotFoundError } = require('../errors/NotFoundError');
 const { ConflictError } = require('../errors/ConflictError');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
 const PARENT_DOMAIN = 'explorer.nomoreparties.sbs';
 const DEV_DOMAIN = 'localhost';
+const DEV_SECRET = 'dev-secret';
 
 module.exports.createUser = (req, res, next) => {
   const { name, email, password } = req.body;
@@ -24,20 +24,22 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.login = (req, res, next) => {
+  const { NODE_ENV, JWT_SECRET } = process.env;
+  const isProduction = NODE_ENV === 'production';
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        isProduction ? JWT_SECRET : DEV_SECRET,
         { expiresIn: '7d' },
       );
       res
         .cookie('jwt', token, {
           maxAge: 1000 * 3600 * 24 * 7,
           httpOnly: true,
-          domain: NODE_ENV === 'production' ? PARENT_DOMAIN : DEV_DOMAIN,
+          domain: isProduction ? PARENT_DOMAIN : DEV_DOMAIN,
         })
         .send('Successfully logged in');
     })

@@ -2,10 +2,11 @@ const jwt = require('jsonwebtoken');
 const { AuthError } = require('../errors/AuthError');
 
 const extractBearerToken = (header) => header.replace('Bearer ', '');
-const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports = (req, res, next) => {
   const { jwt: jwtToken } = req.cookies;
+  const { NODE_ENV, JWT_SECRET } = process.env;
+
   if (!jwtToken) {
     next(new AuthError('Authorization required'));
     return;
