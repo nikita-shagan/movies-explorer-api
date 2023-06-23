@@ -10,7 +10,7 @@ const moviesRouter = require('./movies');
 
 router.use('/signup', signupRouter);
 router.use('/signin', signinRouter);
-router.use('/signout', signoutRouter);
+router.use('/signout', auth, signoutRouter);
 router.use('/users', auth, usersRouter);
 router.use('/movies', auth, moviesRouter);
 

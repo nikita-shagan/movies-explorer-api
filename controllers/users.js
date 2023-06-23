@@ -68,5 +68,11 @@ module.exports.updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(_id, { name, email }, { new: true, runValidators: true })
     .orFail(new NotFoundError('User not found'))
     .then((user) => res.send(user))
-    .catch(next);
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError('User with this email already exist'));
+      } else {
+        next(err);
+      }
+    });
 };

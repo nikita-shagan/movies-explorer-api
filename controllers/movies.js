@@ -7,7 +7,9 @@ const { NotFoundError } = require('../errors/NotFoundError');
 const isValidId = (id) => mongoose.isValidObjectId(id);
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  const { _id: userId } = req.user;
+
+  Movie.find({ owner: userId })
     .populate(['owner'])
     .then((movies) => res.send(movies))
     .catch(next);

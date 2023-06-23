@@ -10,11 +10,12 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { limiter } = require('./middlewares/rateLimiter');
 require('dotenv').config();
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DATABASE_NAME, NODE_ENV } = process.env;
 
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017/movies_explorer_db');
+const databaseName = NODE_ENV === 'production' ? DATABASE_NAME : 'movies_explorer_db';
+mongoose.connect(`mongodb://127.0.0.1:27017/${databaseName}`);
 
 app.use(limiter);
 app.use(helmet());
