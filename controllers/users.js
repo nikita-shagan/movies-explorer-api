@@ -39,9 +39,11 @@ module.exports.login = (req, res, next) => {
         .cookie('jwt', token, {
           maxAge: 1000 * 3600 * 24 * 7,
           httpOnly: true,
+          secure: true,
+          sameSite: 'None',
           domain: isProduction ? PARENT_DOMAIN : DEV_DOMAIN,
         })
-        .send('Successfully logged in');
+        .send({ message: 'Successfully logged in' });
     })
     .catch(next);
 };
@@ -49,7 +51,7 @@ module.exports.login = (req, res, next) => {
 module.exports.logout = (req, res) => {
   const { NODE_ENV } = process.env;
   const domain = NODE_ENV === 'production' ? PARENT_DOMAIN : DEV_DOMAIN;
-  res.clearCookie('jwt', { domain }).send('Successfully logged out');
+  res.clearCookie('jwt', { domain }).send({ message: 'Successfully logged in' });
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
