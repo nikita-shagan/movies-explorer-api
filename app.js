@@ -19,10 +19,10 @@ mongoose.connect(`mongodb://127.0.0.1:27017/${databaseName}`);
 
 app.use(limiter);
 app.use(helmet());
+app.use(corsHandler);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(corsHandler);
 app.use(requestLogger);
 
 app.use('/', routes);
