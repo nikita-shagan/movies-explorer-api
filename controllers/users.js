@@ -39,7 +39,7 @@ module.exports.login = (req, res, next) => {
         maxAge: 1000 * 3600 * 24 * 7,
         httpOnly: true,
         secure: true,
-        sameSite: 'None',
+        sameSite: true,
         domain: isProduction ? PARENT_DOMAIN : DEV_DOMAIN,
       };
       res.cookie('jwt', token, cookieOptions).send({ message: 'Successfully logged in' });
@@ -52,7 +52,7 @@ module.exports.logout = (req, res) => {
   const cookieOptions = {
     httpOnly: true,
     secure: true,
-    sameSite: 'None',
+    sameSite: true,
     domain: NODE_ENV === 'production' ? PARENT_DOMAIN : DEV_DOMAIN,
   };
   res.clearCookie('jwt', cookieOptions).send({ message: 'Successfully logged in' });
